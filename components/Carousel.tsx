@@ -34,24 +34,25 @@ function Carousel(props: props) {
           <ChevronRightIcon className="h-10 w-10 pl-1" />
         </div>
       </div>
-      {props.imageUrl.map((url, index) => (
-        <div
-          key={index}
-          className={`absolute h-[70vh] w-full flex justify-center items-center transition duration-500`}
-          style={{
-            left: `${(currentIndex - index) * 100}%`,
-          }}
-        >
-          <Image
-            src={url}
-            height={350}
-            width={300}
-            alt={`Product image ${index + 1}`}
-            unoptimized
-            className="h-full w-auto"
-          />
-        </div>
-      ))}
+      {Array.isArray(props.imageUrl) &&
+        props.imageUrl.map((url, index) => (
+          <div
+            key={index}
+            className={`absolute h-[70vh] w-full flex justify-center items-center transition duration-500`}
+            style={{
+              left: `${(currentIndex - index) * 100}%`,
+            }}
+          >
+            <Image
+              src={url}
+              height={350}
+              width={300}
+              alt={`Product image ${index + 1}`}
+              unoptimized
+              className="h-full w-auto"
+            />
+          </div>
+        ))}
     </div>
   );
 }

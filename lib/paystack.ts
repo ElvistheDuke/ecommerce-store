@@ -81,7 +81,7 @@ export async function getProducts(id: number | null = null) {
 
   const data = await response.json();
   // console.log("The files are" + data.data[0].files[0].path);
-  const products = data.data.map((item: Product) => ({
+  const products = data.data?.map((item: Product) => ({
     id: item.id,
     name: item.name,
     description: item.description,
