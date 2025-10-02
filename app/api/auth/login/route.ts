@@ -1,24 +1,5 @@
 import { UserInterface } from "@/lib/paystack";
 
-const checkEmail = async (email: string) => {
-  const response = await fetch(
-    `https://api.paystack.co/customer?email=${email}`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
-  const data = await response.json();
-
-  if (data.status && data.data.length > 0) {
-    return true;
-  }
-  return false;
-};
-
 export async function POST(request: Request) {
   const { email, password } = await request.json();
   if (!email || !password) {
