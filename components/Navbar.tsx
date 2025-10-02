@@ -1,10 +1,27 @@
+"use client";
+import { useUserStore } from "@/store/user-store";
 import { MagnifyingGlassIcon } from "@heroicons/react/16/solid";
-import { ShoppingCartIcon, UserIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowLeftStartOnRectangleIcon,
+  ShoppingCartIcon,
+  UserIcon,
+} from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { Button } from "./ui/button";
+import { useState } from "react";
+import LogInModal from "./LogInModal";
+import SignUpModal from "./SignUpModal";
 
 const Navbar = () => {
+  const user = useUserStore((state) => state.user);
+  const clearUser = useUserStore((state) => state.clearUser);
+  const [logInModal, setLogInModal] = useState(false);
+  const [signUpModal, setSignUpModal] = useState(false);
   return (
     <nav>
+      {logInModal && <LogInModal setLogInModal={setLogInModal} />}
+      {signUpModal && <SignUpModal setSignUpModal={setSignUpModal} />}
+
       <div className="flex justify-between p-4 container mx-auto items-center gap-10">
         <div>
           <Link href={"/"}>
@@ -17,8 +34,41 @@ const Navbar = () => {
           <MagnifyingGlassIcon className="h-5 w-5" />
           <input type="text" className="w-full outline-0" name="" id="" />
         </div>
-        <div className="flex gap-4 items-center">
-          <div className="flex gap-1 items-center">
+        {user ? (
+          <div className="flex gap-4 items-center">
+            <div className="flex gap-1 items-center">
+              <ShoppingCartIcon className="h-5 w-5" />
+              <p>Cart</p>
+            </div>
+            <div
+              onClick={clearUser}
+              className="flex gap-1 items-center cursor-pointer"
+            >
+              <ArrowLeftStartOnRectangleIcon className="h-5 w-5" />
+              <p>Log Out</p>
+            </div>
+          </div>
+        ) : (
+          <div className="flex gap-2">
+            <Button
+              onClick={() => setLogInModal(true)}
+              variant={"ghost"}
+              className="cursor-pointer"
+            >
+              <p>Log In</p>
+            </Button>
+            <Button
+              variant={"default"}
+              onClick={() => setSignUpModal(true)}
+              className="cursor-pointer bg-[var(--color-primary)] text-white"
+            >
+              <p>Sign Up</p>
+            </Button>
+          </div>
+        )}
+
+        {/* <div className="flex gap-4 items-center">
+          <div className="flex gap-1 items-center cursor-pointer">
             <UserIcon className="h-5 w-5" />
             <p>Account</p>
           </div>
@@ -26,7 +76,7 @@ const Navbar = () => {
             <ShoppingCartIcon className="h-5 w-5" />
             <p>Cart</p>
           </div>
-        </div>
+        </div> */}
       </div>
     </nav>
   );

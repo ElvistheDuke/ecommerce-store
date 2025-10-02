@@ -14,7 +14,7 @@ function HeroSection() {
             <h1 className="text-5xl text-white font-bold w-[35%] min-w-[300px] leading-none">
               Shopping and Department Store
             </h1>
-            <p className="max-w-96 text-white leading-none mt-6">
+            <p className="max-w-96 text-white leading-5 mt-6">
               Shopping is a bit of a relaxing hobby for me, which is sometimes
               troubling for the bank balance.
             </p>

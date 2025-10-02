@@ -71,6 +71,21 @@ export interface Meta {
   pageCount: number;
 }
 
+export interface UserInterface {
+  integration: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string | null;
+  metadata?: string | null;
+  domain: string;
+  customer_code: string;
+  risk_action: string;
+  id: number;
+  createdAt: string; // ISO date string
+  updatedAt: string; // ISO date string
+}
+
 export async function getProducts(id: number | null = null) {
   const response = await fetch("https://api.paystack.co/product", {
     headers: {
