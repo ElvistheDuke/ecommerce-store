@@ -1,6 +1,9 @@
+"use client";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import Link from "next/link";
+import { useCartStore } from "@/store/cart-store";
+import { useUserStore } from "@/store/user-store";
 
 interface ProductCardProps {
   // Define props here if needed in the future
@@ -15,6 +18,8 @@ interface ProductCardProps {
 }
 
 function ProductCard(props: ProductCardProps) {
+  const { user } = useUserStore();
+  const { addItem } = useCartStore();
   const { product } = props;
   console.log("Check Url", product.imageUrl[0]);
   return (
@@ -32,9 +37,18 @@ function ProductCard(props: ProductCardProps) {
         </Link>
         {/* <div className="w-full bg-gray-200 h-[350px]"></div> */}
         <div className="text-center w-full flex flex-col items-center">
-          <p className="font-semibold mt-4">{product.name}</p>
-          <p className="">₦{product.price}</p>
-          <Button className="mt-4 bg-[var(--color-primary)] w-[90%] absolute bottom-4 cursor-pointer">
+          <p className="font-semibold mt-4 px-1">{product.name}</p>
+          <p className="font-bold text-lg">₦{product.price}</p>
+          <Button
+            onClick={() => {
+              if (user) {
+                addItem({ ...product, quantity: 1 });
+              } else {
+                alert("Please log in to add items to the cart");
+              }
+            }}
+            className="mt-4 bg-[var(--color-primary)] w-[90%] absolute bottom-4 cursor-pointer"
+          >
             Add to Cart
           </Button>
         </div>

@@ -78,6 +78,8 @@ function LogInModal(props: LogInModalProps) {
         firstName: data.user.first_name,
         lastName: data.user.last_name,
         email: data.user.email,
+        customerCode: data.user.customer_code,
+        phone: data.user.phone || undefined,
       });
       props.setLogInModal(false);
     } else {

@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export interface CartItem {
   id: number;
@@ -19,29 +20,44 @@ interface CartStore {
   getTotalPrice: () => number;
 }
 
-export const useCartStore = create<CartStore>((set, get) => ({
-  items: [],
-  addItem: (item: CartItem) =>
-    set((state) => {
-      const existingItem = state.items.find((i) => i.id === item.id);
-      if (existingItem) {
-        return {
-          items: state.items?.map((i) =>
-            i.id === item.id
-              ? { ...i, quantity: i.quantity + item.quantity }
-              : i
-          ),
-        };
-      }
-      return { items: [...state.items, item] };
+export const useCartStore = create<CartStore>()(
+  persist(
+    (set, get) => ({
+      items: [],
+      addItem: (item: CartItem) =>
+        set((state) => {
+          const existingItem = state.items.find((i) => i.id === item.id);
+          if (existingItem) {
+            if (existingItem.quantity + item.quantity <= 0) {
+              return {
+                items: state.items.filter((i) => i.id !== item.id),
+              };
+            }
+            return {
+              items: state.items?.map((i) =>
+                i.id === item.id
+                  ? { ...i, quantity: i.quantity + item.quantity }
+                  : i
+              ),
+            };
+          }
+          return { items: [...state.items, item] };
+        }),
+      removeItem: (id: number) =>
+        set((state) => ({
+          items: state.items.filter((item) => item.id !== id),
+        })),
+      clearCart: () => set({ items: [] }),
+      getTotalItems: () =>
+        get().items.reduce((total, item) => total + item.quantity, 0),
+      getTotalPrice: () =>
+        get().items.reduce(
+          (total, item) => total + item.price * item.quantity,
+          0
+        ),
     }),
-  removeItem: (id: number) =>
-    set((state) => ({
-      items: state.items.filter((item) => item.id !== id),
-    })),
-  clearCart: () => set({ items: [] }),
-  getTotalItems: () =>
-    get().items.reduce((total, item) => total + item.quantity, 0),
-  getTotalPrice: () =>
-    get().items.reduce((total, item) => total + item.price * item.quantity, 0),
-}));
+    {
+      name: "cart-storage", // key in localStorage
+    }
+  )
+);

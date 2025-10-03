@@ -36,7 +36,6 @@ function SignUpModal(props: SignUpModalProps) {
       setErrorMessage("All fields except phone are required");
       return;
     }
-    setUser({ firstName, lastName, email });
 
     const res = await fetch("/api/auth/signup", {
       method: "POST",
@@ -45,6 +44,16 @@ function SignUpModal(props: SignUpModalProps) {
 
     if (res.ok) {
       props.setSignUpModal(false);
+      const data = await res.json();
+      alert(data.message || "Signed up successfully");
+      // Automatically log in the user after successful sign-up
+      setUser({
+        firstName,
+        lastName,
+        email,
+        customerCode: data.data.customer_code,
+        phone: data.data.phone || undefined,
+      });
     } else {
       const data = await res.json();
       alert(data.message || "Error signing up");

@@ -11,8 +11,10 @@ import { Button } from "./ui/button";
 import { useState } from "react";
 import LogInModal from "./LogInModal";
 import SignUpModal from "./SignUpModal";
+import { useCartStore } from "@/store/cart-store";
 
 const Navbar = () => {
+  const { items } = useCartStore();
   const user = useUserStore((state) => state.user);
   const clearUser = useUserStore((state) => state.clearUser);
   const [logInModal, setLogInModal] = useState(false);
@@ -36,10 +38,17 @@ const Navbar = () => {
         </div>
         {user ? (
           <div className="flex gap-4 items-center">
-            <div className="flex gap-1 items-center">
-              <ShoppingCartIcon className="h-5 w-5" />
-              <p>Cart</p>
-            </div>
+            <Link href={"/cart"}>
+              <div className="flex gap-1 items-center relative cursor-pointer">
+                {items.length > 0 && (
+                  <div className="absolute bg-[var(--color-primary)] text-white rounded-full -left-5 text-xs w-5 h-5 flex items-center justify-center">
+                    <p>{items.length}</p>
+                  </div>
+                )}
+                <ShoppingCartIcon className="h-5 w-5" />
+                <p>Cart</p>
+              </div>
+            </Link>
             <div
               onClick={clearUser}
               className="flex gap-1 items-center cursor-pointer"

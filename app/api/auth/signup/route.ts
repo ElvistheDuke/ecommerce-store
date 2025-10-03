@@ -62,11 +62,15 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
+  const data = await response.json();
 
   // return Response.redirect(new URL("/", request.url));
 
   return new Response(
-    JSON.stringify({ message: "User registered successfully" }),
+    JSON.stringify({
+      message: "User registered successfully",
+      data: data,
+    }),
     { status: 200 }
   );
 }

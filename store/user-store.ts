@@ -6,6 +6,7 @@ export interface User {
   lastName: string;
   email: string;
   phone?: string;
+  customerCode?: string;
 }
 
 interface UserStore {
