@@ -1,7 +1,8 @@
 import type { CartItem } from "@/store/cart-store";
 
 export async function POST(req: Request) {
-  const { discount, customerCode, cartItems, tax } = await req.json();
+  const { discount = 0, customerCode, cartItems, tax = 0 } = await req.json();
+  console.log("First Cleared");
 
   if (!customerCode || !cartItems || cartItems.length === 0) {
     return new Response(
@@ -11,7 +12,8 @@ export async function POST(req: Request) {
   }
 
   const lineItems = cartItems.map((item: CartItem) => ({
-    product: item.product_code,
+    name: item.name,
+    amount: item.price * 100, // Paystack requires kobo
     quantity: item.quantity,
   }));
 
@@ -25,13 +27,14 @@ export async function POST(req: Request) {
       customer: customerCode,
       line_items: [
         ...lineItems,
-        { name: "Discount", amount: -discount, quantity: 1 },
-        { name: "Tax", amount: tax, quantity: 1 },
+        { name: "Discount", amount: -(discount * 100), quantity: 1 },
+        { name: "Tax", amount: tax * 100, quantity: 1 },
       ],
       description: "Payment for items in cart",
     }),
   });
   const data = await response.json();
+  console.log("Second Cleared");
   if (response.ok) {
     return new Response(
       JSON.stringify({

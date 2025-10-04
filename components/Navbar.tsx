@@ -4,6 +4,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/16/solid";
 import {
   ArrowLeftStartOnRectangleIcon,
   ShoppingCartIcon,
+  TruckIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
@@ -12,6 +13,7 @@ import { useState } from "react";
 import LogInModal from "./LogInModal";
 import SignUpModal from "./SignUpModal";
 import { useCartStore } from "@/store/cart-store";
+import { motion } from "framer-motion";
 
 const Navbar = () => {
   const { items } = useCartStore();
@@ -19,6 +21,7 @@ const Navbar = () => {
   const clearUser = useUserStore((state) => state.clearUser);
   const [logInModal, setLogInModal] = useState(false);
   const [signUpModal, setSignUpModal] = useState(false);
+  const [options, setOptions] = useState(false);
   return (
     <nav>
       {logInModal && <LogInModal setLogInModal={setLogInModal} />}
@@ -49,12 +52,41 @@ const Navbar = () => {
                 <p>Cart</p>
               </div>
             </Link>
-            <div
+            {/* <div
               onClick={clearUser}
               className="flex gap-1 items-center cursor-pointer"
             >
               <ArrowLeftStartOnRectangleIcon className="h-5 w-5" />
               <p>Log Out</p>
+            </div> */}
+            <div
+              onClick={() => setOptions(!options)}
+              className="flex gap-1 items-center cursor-pointer relative"
+            >
+              <motion.div
+                animate={{
+                  height: options ? "auto" : 0,
+                  overflow: "hidden",
+                  padding: !options ? "0 0 0 20px" : "0 0 8px 20px",
+                }}
+                className="absolute w-30 left-[50%] -translate-x-[50%] pb-2 bg-white z-90 top-[120%] gap-1 flex flex-col items-start pl-5"
+              >
+                <Link href={"/orders"}>
+                  <div className="flex gap-1 items-center cursor-pointer ">
+                    <TruckIcon className="h-5 w-5" />
+                    <p>Orders</p>
+                  </div>
+                </Link>
+                <div
+                  onClick={clearUser}
+                  className="flex gap-1 items-center cursor-pointer "
+                >
+                  <ArrowLeftStartOnRectangleIcon className="h-5 w-5" />
+                  <p>Log Out</p>
+                </div>
+              </motion.div>
+              <UserIcon className="h-5 w-5" />
+              <p>Account</p>
             </div>
           </div>
         ) : (

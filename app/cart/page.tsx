@@ -43,11 +43,13 @@ function ShoppingCart() {
     const data = await response.json();
     if (response.ok) {
       // Redirect to payment URL or handle success
-      console.log("Payment request created:", data);
+      clearCart();
+      window.location.href = `https://paystack.shop/pay/${data.data.request_code}`;
       //   router.push(`https://paystack.shop/pay/${data.data.request_code}`);
     } else {
       // Handle error
-      console.error("Error creating payment request:", data);
+
+      console.log("Error creating payment request:", data);
     }
   };
 
@@ -107,7 +109,10 @@ function ShoppingCart() {
               <p>Total:</p>
               <p className="font-semibold ">N{addCommaNumber(totalSum)}</p>
             </div>
-            <Button className="w-full bg-[var(--color-primary)] text-white py-2 rounded cursor-pointer my-4">
+            <Button
+              onClick={handleCheckout}
+              className="w-full bg-[var(--color-primary)] text-white py-2 rounded cursor-pointer my-4"
+            >
               <p>Proceed to Checkout</p>
             </Button>
           </div>
